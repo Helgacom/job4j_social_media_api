@@ -19,6 +19,8 @@ public class Friend {
     @EqualsAndHashCode.Include
     private Long id;
 
+    private boolean status;
+
     @ManyToOne
     @JoinColumn(name = "user_offer_id")
     private User user;
@@ -26,6 +28,4 @@ public class Friend {
     @ManyToOne
     @JoinColumn(name = "user_accept_id")
     private User friend;
-
-    private boolean status;
 }

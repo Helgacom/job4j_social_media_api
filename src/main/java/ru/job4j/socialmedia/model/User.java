@@ -3,9 +3,6 @@ package ru.job4j.socialmedia.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
@@ -26,8 +23,4 @@ public class User {
     private String login;
 
     private String password;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<Post> posts = new ArrayList<>();
 }
