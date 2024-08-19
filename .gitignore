@@ -58,7 +58,6 @@ hs_err_pid*
 
 # other
 *.db
-application.properties
 /mvnw.cmd
 /mvnw
 /.mvn/wrapper/maven-wrapper.properties
