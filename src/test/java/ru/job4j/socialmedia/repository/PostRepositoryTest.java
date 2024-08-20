@@ -6,8 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.model.User;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -48,6 +52,72 @@ class PostRepositoryTest {
         var foundPost = postRepository.findById(post.getId());
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getTitle()).isEqualTo("testTitle");
+    }
+
+    @Test
+    public void whenFindByUserIdThenFindPostsList() {
+        var user = new User();
+        user.setName("testName");
+        user.setLogin("test@example.com");
+        user.setPassword("123t");
+        userRepository.save(user);
+        var post1 = new Post();
+        post1.setTitle("testTitle1");
+        post1.setText("testText1");
+        post1.setUser(user);
+        var post2 = new Post();
+        post2.setTitle("testTitle2");
+        post2.setText("testText2");
+        post2.setUser(user);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        var posts = postRepository.findByUserId(user.getId());
+        assertThat(posts).hasSize(2);
+        assertThat(posts).containsExactlyInAnyOrder(post1, post2);
+    }
+
+    @Test
+    public void whenFindByOrderByCreatedThanGetPostsPage() {
+        var user = new User();
+        user.setName("testName");
+        user.setLogin("test@example.com");
+        user.setPassword("123t");
+        userRepository.save(user);
+        var post1 = new Post();
+        post1.setTitle("testTitle1");
+        post1.setText("testText1");
+        post1.setUser(user);
+        var post2 = new Post();
+        post2.setTitle("testTitle2");
+        post2.setText("testText2");
+        post2.setUser(user);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        assertThat(postRepository.findByOrderByCreated(Pageable.ofSize(1))
+                .getTotalElements()).isEqualTo(2);
+    }
+
+    @Test
+    public void whenFindByCreatedThenFindPostsList() {
+        var user = new User();
+        user.setName("testName");
+        user.setLogin("test@example.com");
+        user.setPassword("123t");
+        userRepository.save(user);
+        var post1 = new Post();
+        post1.setTitle("testTitle1");
+        post1.setText("testText1");
+        post1.setUser(user);
+        var post2 = new Post();
+        post2.setTitle("testTitle2");
+        post2.setText("testText2");
+        post2.setUser(user);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        LocalDateTime today = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.DAYS);
+        assertThat(postRepository.findByCreatedGreaterThanEqual(today))
+                .hasSize(2)
+                .containsExactlyInAnyOrder(post1, post2);
     }
 
     @Test
