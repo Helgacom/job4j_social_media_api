@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.job4j.socialmedia.model.File;
-import ru.job4j.socialmedia.model.User;
 
 import static org.assertj.core.api.Assertions.*;
 
