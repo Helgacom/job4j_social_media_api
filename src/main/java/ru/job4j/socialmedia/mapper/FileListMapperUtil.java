@@ -1,6 +1,6 @@
 package ru.job4j.socialmedia.mapper;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import ru.job4j.socialmedia.model.File;
@@ -10,10 +10,10 @@ import java.util.List;
 
 @Named("FileListMapperUtil")
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FileListMapperUtil {
 
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
 
     @Named("findFilesByPostId")
     public List<File> findFilesByPostId(Long postId) {
