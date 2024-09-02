@@ -100,6 +100,17 @@ public class SimplePostService implements PostService {
         return rsl;
     }
 
+    @Override
+    public boolean update(Post post) {
+        return repository.updateTitleAndText(post.getTitle(), post.getText(), post.getId()) > 0L;
+    }
+
+    @Override
+    public boolean updateFromDto(PostDto post) {
+        var newPost = postMapper.getPostFromPostDto(post);
+        return repository.updateTitleAndText(newPost.getTitle(), newPost.getText(), newPost.getId()) > 0L;
+    }
+
     @Transactional
     @Override
     public boolean updatePostByUser(User user, Post post) {

@@ -3,7 +3,6 @@ package ru.job4j.socialmedia.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.job4j.socialmedia.dto.PostDto;
-import ru.job4j.socialmedia.model.File;
 import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.model.User;
 
@@ -16,6 +15,10 @@ public interface PostService {
     Post save(Post post);
 
     Post create(PostDto post);
+
+    boolean update(Post post);
+
+    boolean updateFromDto(PostDto post);
 
     Optional<Post> findById(Long id);
 
