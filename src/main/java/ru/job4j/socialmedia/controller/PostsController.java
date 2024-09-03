@@ -27,7 +27,6 @@ public class PostsController {
     }
 
     @GetMapping("/{userId}")
-
     public ResponseEntity<List<Post>> getByUserId(@PathVariable("userId") Long userId) {
         var rsl = postService.findByUserId(userId);
         if (!rsl.isEmpty()) {

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.job4j.socialmedia.dto.PostDto;
 import ru.job4j.socialmedia.model.Post;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         uses = {FileMapper.class, FileListMapperUtil.class},
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
@@ -17,4 +19,8 @@ public interface PostMapper {
     PostDto getPostDtoFromPost(Post post);
 
     Post getPostFromPostDto(PostDto postDto);
+
+    default List<PostDto> getPostDtoListFromPostList(List<Post> postList) {
+        return postList.stream().map(this::getPostDtoFromPost).toList();
+    }
 }

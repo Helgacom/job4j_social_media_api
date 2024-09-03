@@ -2,6 +2,8 @@ package ru.job4j.socialmedia.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.socialmedia.dto.UserDto;
+import ru.job4j.socialmedia.mapper.UserMapper;
 import ru.job4j.socialmedia.model.User;
 import ru.job4j.socialmedia.repository.UserRepository;
 
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class SimpleUserService implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public User save(User user) {
@@ -22,6 +25,15 @@ public class SimpleUserService implements UserService {
     @Override
     public boolean update(User user) {
         return userRepository.update(user) > 0L;
+    }
+
+    @Override
+    public List<UserDto> findByUserIdsList(List<Long> userIds) {
+        return userIds.stream().map(userRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(userMapper::userToUserDto)
+                .toList();
     }
 
     @Override
