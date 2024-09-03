@@ -20,7 +20,7 @@ public class PostController {
     public ResponseEntity<Post> get(@PathVariable("postId") Long postId) {
         return postService.findById(postId)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
@@ -39,21 +39,23 @@ public class PostController {
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody PostDto post) {
         if (postService.updateFromDto(post)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PatchMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void change(@RequestBody PostDto post) {
-        postService.updateFromDto(post);
+    public ResponseEntity<Void> change(@RequestBody PostDto post) {
+        if (postService.updateFromDto(post)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> removeById(@PathVariable Long postId) {
         if (postService.deleteById(postId)) {
-            return ResponseEntity.noContent().build();
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }

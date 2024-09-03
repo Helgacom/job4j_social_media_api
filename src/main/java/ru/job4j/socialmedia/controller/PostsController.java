@@ -2,6 +2,7 @@ package ru.job4j.socialmedia.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.service.PostService;
@@ -17,13 +18,21 @@ public class PostsController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Post> getAll() {
-        return postService.findAll();
+    public ResponseEntity<List<Post>> getAll() {
+        var rsl = postService.findAll();
+        if (!rsl.isEmpty()) {
+            return ResponseEntity.ok(rsl);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Post> getByUserId(@PathVariable("userId") Long userId) {
-        return postService.findByUserId(userId);
+
+    public ResponseEntity<List<Post>> getByUserId(@PathVariable("userId") Long userId) {
+        var rsl = postService.findByUserId(userId);
+        if (!rsl.isEmpty()) {
+            return ResponseEntity.ok(rsl);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
