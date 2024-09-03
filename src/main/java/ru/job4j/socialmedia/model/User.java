@@ -18,8 +18,10 @@ public class User {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String login;
 
     private String password;
