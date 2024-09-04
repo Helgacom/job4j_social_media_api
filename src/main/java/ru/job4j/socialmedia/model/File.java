@@ -1,6 +1,7 @@
 package ru.job4j.socialmedia.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -18,7 +19,11 @@ public class File {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "name не может быть пустым")
     private String name;
+
+    @NotBlank(message = "path не может быть пустым")
+    @Column(unique = true, nullable = false)
     private String path;
 
     @ManyToOne

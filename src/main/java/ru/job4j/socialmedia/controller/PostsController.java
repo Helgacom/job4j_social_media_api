@@ -17,7 +17,6 @@ public class PostsController {
     private final PostService postService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Post>> getAll() {
         var rsl = postService.findAll();
         if (!rsl.isEmpty()) {

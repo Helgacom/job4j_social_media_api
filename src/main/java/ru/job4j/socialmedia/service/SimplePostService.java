@@ -1,10 +1,12 @@
 package ru.job4j.socialmedia.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.job4j.socialmedia.dto.PostDto;
 import ru.job4j.socialmedia.mapper.FileMapper;
 import ru.job4j.socialmedia.mapper.PostMapper;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 @Service
 @AllArgsConstructor
 public class SimplePostService implements PostService {
@@ -78,7 +81,7 @@ public class SimplePostService implements PostService {
 
     @Transactional
     @Override
-    public Post create(PostDto post) {
+    public Post create(@Valid PostDto post) {
         var newPost = postMapper.getPostFromPostDto(post);
         repository.save(newPost);
         var fileList = fileMapper.getFileListFromFileListDto(post);
@@ -106,7 +109,7 @@ public class SimplePostService implements PostService {
     }
 
     @Override
-    public boolean updateFromDto(PostDto post) {
+    public boolean updateFromDto(@Valid PostDto post) {
         var newPost = postMapper.getPostFromPostDto(post);
         return repository.updateTitleAndText(newPost.getTitle(), newPost.getText(), newPost.getId()) > 0L;
     }

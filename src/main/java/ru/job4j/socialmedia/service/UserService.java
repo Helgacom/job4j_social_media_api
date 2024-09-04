@@ -10,7 +10,11 @@ public interface UserService {
 
     User save(User user);
 
+    User create(UserDto user);
+
     boolean update(User user);
+
+    boolean updateFromDto(UserDto user);
 
     Optional<User> findById(Long userId);
 

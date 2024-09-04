@@ -1,14 +1,19 @@
 package ru.job4j.socialmedia.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.job4j.socialmedia.dto.PostDto;
 import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.service.PostService;
 
+@Validated
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/post")
@@ -17,14 +22,17 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> get(@PathVariable("postId") Long postId) {
+    public ResponseEntity<Post> get(@PathVariable("postId")
+                                        @NotNull
+                                        @Min(value = 1, message = "номер ресурса должен быть 1 и более")
+                                        Long postId) {
         return postService.findById(postId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> save(@RequestBody PostDto post) {
+    public ResponseEntity<PostDto> save(@Valid @RequestBody PostDto post) {
         postService.create(post);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -37,7 +45,7 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody PostDto post) {
+    public ResponseEntity<Void> update(@Valid @RequestBody PostDto post) {
         if (postService.updateFromDto(post)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -45,7 +53,7 @@ public class PostController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> change(@RequestBody PostDto post) {
+    public ResponseEntity<Void> change(@Valid @RequestBody PostDto post) {
         if (postService.updateFromDto(post)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }

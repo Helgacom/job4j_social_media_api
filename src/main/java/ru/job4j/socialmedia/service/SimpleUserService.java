@@ -1,7 +1,9 @@
 package ru.job4j.socialmedia.service;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.mapper.UserMapper;
 import ru.job4j.socialmedia.model.User;
@@ -10,6 +12,7 @@ import ru.job4j.socialmedia.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 @Service
 @AllArgsConstructor
 public class SimpleUserService implements UserService {
@@ -25,6 +28,19 @@ public class SimpleUserService implements UserService {
     @Override
     public boolean update(User user) {
         return userRepository.update(user) > 0L;
+    }
+
+    @Override
+    public User create(@Valid UserDto user) {
+        var newUser = userMapper.userDtoToUser(user);
+        userRepository.save(newUser);
+        return newUser;
+    }
+
+    @Override
+    public boolean updateFromDto(@Valid UserDto user) {
+        var newUser = userMapper.userDtoToUser(user);
+        return userRepository.update(newUser) > 0L;
     }
 
     @Override

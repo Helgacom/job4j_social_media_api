@@ -1,7 +1,9 @@
 package ru.job4j.socialmedia.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +22,9 @@ public class Post {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "title не может быть пустым")
+    @Length(min = 3,
+            message = "title должен быть не менее 3 символов")
     private String title;
 
     private String text;

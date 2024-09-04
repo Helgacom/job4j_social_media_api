@@ -43,7 +43,7 @@ class UserRepositoryTest {
     public void whenSaveUserThenFindById() {
         var user = new User();
         user.setName("testName");
-        user.setLogin("test@example.com");
+        user.setLogin("test@ex.com");
         user.setPassword("123t");
         userRepository.save(user);
         var foundUser = userRepository.findById(user.getId());
@@ -55,11 +55,11 @@ class UserRepositoryTest {
     public void whenFindAllThenReturnAllUsers() {
         var user1 = new User();
         user1.setName("testName1");
-        user1.setLogin("test1@example.com");
+        user1.setLogin("test1@ex.com");
         user1.setPassword("123t1");
         var user2 = new User();
         user2.setName("testName2");
-        user2.setLogin("test2@example.com");
+        user2.setLogin("test2@ex.com");
         user2.setPassword("123t2");
         userRepository.save(user1);
         userRepository.save(user2);
@@ -72,7 +72,7 @@ class UserRepositoryTest {
     public void whenDeleteUserThenUserNotFound() {
         var user = new User();
         user.setName("testName");
-        user.setLogin("test@example.com");
+        user.setLogin("test@ex.com");
         user.setPassword("123t");
         userRepository.save(user);
         userRepository.delete(user);
@@ -85,10 +85,10 @@ class UserRepositoryTest {
     public void whenFindByLoginAndPasswordThenFindUser() {
         var user = new User();
         user.setName("testName");
-        user.setLogin("test@example.com");
+        user.setLogin("test@ex.com");
         user.setPassword("123t");
         userRepository.save(user);
-        var foundUser = userRepository.findByLoginAndPassword("test@example.com", "123t");
+        var foundUser = userRepository.findByLoginAndPassword("test@ex.com", "123t");
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getName()).isEqualTo("testName");
     }
@@ -97,15 +97,15 @@ class UserRepositoryTest {
     public void whenFindAllFriendsByIdThenReturnUserFriends() {
         var userOffer = new User();
         userOffer.setName("testName1");
-        userOffer.setLogin("test1@example.com");
+        userOffer.setLogin("test1@ex.com");
         userOffer.setPassword("123t1");
         var userAccept1 = new User();
         userAccept1.setName("testName2");
-        userAccept1.setLogin("test2@example.com");
+        userAccept1.setLogin("test2@ex.com");
         userAccept1.setPassword("123t2");
         var userAccept2 = new User();
         userAccept2.setName("testName3");
-        userAccept2.setLogin("test3@example.com");
+        userAccept2.setLogin("test3@ex.com");
         userAccept2.setPassword("123t3");
         userRepository.save(userOffer);
         userRepository.save(userAccept1);
@@ -129,11 +129,11 @@ class UserRepositoryTest {
     public void whenFindAllSubscribersByIdThenReturnAllSubscribers() {
         var userSubscriber = new User();
         userSubscriber.setName("testName1");
-        userSubscriber.setLogin("test1@example.com");
+        userSubscriber.setLogin("test1@ex.com");
         userSubscriber.setPassword("123t1");
         var userTo = new User();
         userTo.setName("testName2");
-        userTo.setLogin("test2@example.com");
+        userTo.setLogin("test2@ex.com");
         userTo.setPassword("123t2");
         userRepository.save(userSubscriber);
         userRepository.save(userTo);
