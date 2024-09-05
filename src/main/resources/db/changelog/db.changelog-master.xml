@@ -12,4 +12,7 @@
     <include file="../scripts/006_ddl_create_subscribes_table.sql" relativeToChangelogFile="true"/>
     <include file="../scripts/007_ddl_create_messages_table.sql" relativeToChangelogFile="true"/>
     <include file="../scripts/008_ddl_create_events_table.sql" relativeToChangelogFile="true"/>
+    <include file="../scripts/009_ddl_create_roles_table.sql" relativeToChangelogFile="true"/>
+    <include file="../scripts/010_dml_insert_roles_table.sql" relativeToChangelogFile="true"/>
+    <include file="../scripts/011_ddl_create_users_roles_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

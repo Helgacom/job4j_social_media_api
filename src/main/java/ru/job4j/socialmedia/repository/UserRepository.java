@@ -46,5 +46,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where f.user.id = :id and f.status = true
             """)
     List<User> findAllFriendsById(@Param("id") Long id);
+
+    Optional<User> findByName(String name);
+
+    Boolean existsByName(String name);
+
+    Boolean existsByLogin(String login);
 }
 

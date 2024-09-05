@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,6 +37,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Post.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema()) }) })
     @GetMapping("/{postId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Post> get(@PathVariable("postId")
                                         @NotNull
                                         @Min(value = 1, message = "номер ресурса должен быть 1 и более")
@@ -53,6 +55,7 @@ public class PostController {
             @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = PostDto.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema()) }) })
     @PostMapping
+    @PreAuthorize("#post.user.login == authentication.principal.login")
     public ResponseEntity<PostDto> save(@Valid @RequestBody PostDto post) {
         postService.create(post);
         var uri = ServletUriComponentsBuilder
@@ -73,6 +76,7 @@ public class PostController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400", description = "Unable to update")})
     @PutMapping
+    @PreAuthorize("#post.user.login == authentication.principal.login")
     public ResponseEntity<Void> update(@Valid @RequestBody PostDto post) {
         if (postService.updateFromDto(post)) {
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -88,6 +92,7 @@ public class PostController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400", description = "Unable to change")})
     @PatchMapping
+    @PreAuthorize("#post.user.login == authentication.principal.login")
     public ResponseEntity<Void> change(@Valid @RequestBody PostDto post) {
         if (postService.updateFromDto(post)) {
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -103,6 +108,7 @@ public class PostController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "404", description = "Unable to remove")})
     @DeleteMapping("/{postId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> removeById(@PathVariable Long postId) {
         if (postService.deleteById(postId)) {
             ResponseEntity.status(HttpStatus.NO_CONTENT).build();

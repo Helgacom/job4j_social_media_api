@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import ru.job4j.socialmedia.security.models.Role;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -40,4 +44,16 @@ public class User {
     @Schema(description = "User password", example = "abc123")
     @NotBlank(message = "password не может быть пустым")
     private String password;
+
+    @Schema(description = "User security statuses")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public User(String name, String login, String password) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+    }
 }

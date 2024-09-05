@@ -12,11 +12,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.model.User;
+import ru.job4j.socialmedia.security.userdetails.UserDetailsImpl;
 import ru.job4j.socialmedia.service.UserService;
 
 @Tag(name = "UserController", description = "UserController management APIs")
@@ -36,6 +40,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = User.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema()) }) })
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<User> get(@PathVariable("userId")
                                         @NotNull
                                         @Min(value = 1, message = "номер ресурса должен быть 1 и более")
@@ -53,6 +58,7 @@ public class UserController {
             @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema()) }) })
     @PostMapping
+    @PostAuthorize("#user.login == authentication.principal.login")
     public ResponseEntity<UserDto> save(@Valid @RequestBody UserDto user) {
         userService.create(user);
         var uri = ServletUriComponentsBuilder
@@ -73,6 +79,7 @@ public class UserController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400", description = "Unable to update")})
     @PutMapping
+    @PreAuthorize("user.login == authentication.principal.login")
     public ResponseEntity<Void> update(@Valid @RequestBody UserDto user) {
         if (userService.updateFromDto(user)) {
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -88,6 +95,7 @@ public class UserController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400", description = "Unable to change")})
     @PatchMapping
+    @PreAuthorize("#user.login == authentication.principal.login")
     public ResponseEntity<Void> change(@Valid @RequestBody UserDto user) {
         if (userService.updateFromDto(user)) {
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -103,10 +111,23 @@ public class UserController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "404", description = "Unable to remove")})
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeById(@PathVariable Long userId) {
         if (userService.deleteById(userId)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @Operation(
+            summary = "Return current authenticated User",
+            description = "Get a User details object.",
+            tags = { "User", "get" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserDetailsImpl.class), mediaType = "application/json") })})
+    @GetMapping("/current")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDetailsImpl> getCurrentUserDetails(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(userDetails);
     }
 }

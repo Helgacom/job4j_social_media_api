@@ -19,6 +19,9 @@ public class UserDto {
     @Schema(description = "User name", example = "Vetrov Victor")
     private String name;
 
+    @Schema(description = "User login", example = "Vetrov@res.com")
+    private String login;
+
     @Schema(description = "User posts")
     private List<PostDto> posts;
 }

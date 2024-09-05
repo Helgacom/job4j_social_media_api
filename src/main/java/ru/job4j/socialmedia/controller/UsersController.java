@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.model.User;
@@ -34,6 +35,7 @@ public class UsersController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema()) }) })
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<User>> getAll() {
         var rsl = userService.findAll();
         if (!rsl.isEmpty()) {
@@ -51,6 +53,7 @@ public class UsersController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema()) }) })
     @GetMapping("/")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<UserDto>> findUsersWithPosts(@RequestBody List<Long> userIds) {
         var rsl = userService.findByUserIdsList(userIds);
         if (!rsl.isEmpty()) {
